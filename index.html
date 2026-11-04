@@ -1,0 +1,2131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#121212">
+<meta name="description" content="GMART Smart Grocery Rewards mobile app">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<title>GMART Mobile App</title>
+
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+body {
+  background: #121212;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.app-container {
+  width: 100%;
+  max-width: 480px;
+  background: #1e1e1e;
+  min-height: 100vh;
+  position: relative;
+  padding-bottom: 70px;
+}
+
+.page {
+  display: none;
+  padding: 20px;
+}
+
+.page.active {
+  display: block;
+}
+
+.page-title {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #dc2626;
+}
+
+.form-card, .card {
+  background: #2a2a2a;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  border: 1px solid #333;
+}
+
+.label {
+  font-size: 13px;
+  color: #aaa;
+  margin-top: 10px;
+  display: block;
+}
+
+.input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #444;
+  background: #121212;
+  color: #fff;
+  margin-top: 5px;
+  font-size: 15px;
+}
+
+.btn {
+  width: 100%;
+  background: #dc2626;
+  color: white;
+  border: none;
+  padding: 14px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 15px;
+  cursor: pointer;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn.secondary {
+  background: #fff;
+  color: #121212;
+}
+
+.status {
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 14px;
+  display: none;
+}
+
+.status.error {
+  background: #5a1a1a;
+  color: #ff8888;
+  display: block;
+}
+
+.status.ok {
+  background: #1a5a1a;
+  color: #88ff88;
+  display: block;
+}
+
+.hero {
+  background: linear-gradient(135deg, #991b1b, #dc2626);
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  color: #ffffff;
+}
+
+.balance {
+  font-size: 28px;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+.pill {
+  background: rgba(255,255,255,0.25);
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.muted {
+  color: #888;
+  font-size: 13px;
+}
+
+.nav {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  max-width: 480px;
+  background: #1a1a1a;
+  display: flex;
+  border-top: 1px solid #333;
+  height: 60px;
+  z-index: 100;
+}
+
+.nav button {
+  flex: 1;
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 11px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.nav button.active {
+  color: #dc2626;
+}
+
+.nav button b {
+  font-size: 18px;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.refbox {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.code {
+  font-family: monospace;
+  font-size: 18px;
+  letter-spacing: 2px;
+  color: #dc2626;
+  margin: 5px 0;
+  overflow-wrap: anywhere;
+}
+
+.levels {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.level {
+  flex: 1;
+  background: #121212;
+  padding: 8px;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.level b {
+  display: block;
+  font-size: 16px;
+  color: #fff;
+}
+
+.level span {
+  font-size: 10px;
+  color: #888;
+}
+
+.team-member-card {
+  background: #fff;
+  padding: 15px;
+  margin-top: 12px;
+  border-radius: 12px;
+  color: #222;
+}
+
+.team-member-card h3 {
+  margin: 0 0 12px;
+  color: #dc2626;
+}
+
+.member-row {
+  padding: 12px 0;
+  border-top: 1px solid #eee;
+}
+
+.g-coin-3d {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #ffffff 0%, #ef4444 40%, #991b1b 85%, #450a0a 100%);
+  color: #ffffff;
+  font-weight: 900;
+  font-size: 24px;
+  font-family: 'Arial Black', sans-serif;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.8), 0 0 5px rgba(255,255,255,0.6);
+  box-shadow: 0 4px 10px rgba(220, 38, 38, 0.5), inset -2px -2px 6px rgba(0,0,0,0.6), inset 2px 2px 6px rgba(255,255,255,0.8);
+  border: 2px solid #ffffff;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+
+.badge-frozen {
+  background: #f59e0b;
+  color: #121212;
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+}
+
+.badge-unlocked {
+  background: #10b981;
+  color: #fff;
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+}
+
+.badge-expired {
+  background: #ef4444;
+  color: #fff;
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+}
+
+.admin-badge {
+  position: absolute;
+  top: 6px;
+  right: calc(50% - 22px);
+  background: #ef4444;
+  color: #fff;
+  font-size: 10px;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 10px;
+  border: 1px solid #fff;
+}
+
+@media(max-width:360px) {
+  .levels {
+    gap: 4px;
+  }
+  .level {
+    padding: 6px 3px;
+  }
+  .level b {
+    font-size: 14px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app-container">
+
+  <!-- LOGIN PAGE -->
+  <div id="login" class="page active">
+
+    <h2 class="page-title" style="display:flex;align-items:center;">
+      <span class="g-coin-3d">G</span> GMART LOGIN
+    </h2>
+
+    <div class="form-card">
+
+      <label class="label">Mobile Number</label>
+      <input class="input" id="mobile" type="tel"
+        maxlength="10" placeholder="10 digit mobile">
+
+      <label class="label">Password</label>
+      <input class="input" id="password" type="password"
+        placeholder="Enter password">
+
+      <button class="btn" id="loginBtn"
+        onclick="window.loginMember()">LOGIN</button>
+
+      <button class="btn secondary"
+        onclick="window.showAuthPage('register')" style="margin-top:12px;">
+        CREATE NEW ACCOUNT (₹399 JOINING)
+      </button>
+
+    </div>
+
+    <div id="loginStatus" class="status"></div>
+
+  </div>
+
+
+  <!-- REGISTER PAGE WITH CANARA BANK UPI SCANNER (885223337@axl) -->
+  <div id="register" class="page">
+
+    <h2 class="page-title" style="display:flex;align-items:center;">
+      <span class="g-coin-3d">G</span> REGISTER & PAY ₹399
+    </h2>
+
+    <div class="form-card">
+      <div style="background:#3b0764;padding:10px;border-radius:8px;margin-bottom:12px;font-size:12px;border:1px solid #a855f7;">
+        🎁 <strong>Joining Offer:</strong> Pay ₹399 fee via Canara Bank QR & get <strong>250% Coins (997.5 Coins)</strong> instantly! Complete 3 referrals within 21 days to unlock withdrawal.
+      </div>
+
+      <label class="label">Full Name</label>
+      <input class="input" id="regName"
+        placeholder="Enter full name">
+
+      <label class="label">Mobile Number</label>
+      <input class="input" id="regMobile"
+        type="tel" maxlength="10"
+        placeholder="10 digit mobile">
+
+      <label class="label">Password</label>
+      <input class="input" id="regPassword"
+        type="password" placeholder="Minimum 8 characters">
+
+      <label class="label">Confirm Password</label>
+      <input class="input" id="regConfirmPassword"
+        type="password" placeholder="Confirm password">
+
+      <label class="label">Referral Code (Optional)</label>
+      <input class="input" id="regReferral"
+        placeholder="Referral code">
+
+      <!-- CANARA BANK UPI QR SCANNER SECTION (885223337@axl) -->
+      <div style="margin-top:15px;background:#121212;padding:14px;border-radius:8px;border:1px solid #444;text-align:center;">
+        <label class="label" style="color:#fde047;font-weight:bold;margin-bottom:4px;">Canara Bank - 2159 QR Scanner (₹399)</label>
+        <p style="font-size:11px;color:#aaa;margin-bottom:8px;">Primary account for receiving money</p>
+        
+        <!-- Generated QR Code for Canara Bank UPI ID 885223337@axl -->
+        <div style="background:#fff;width:140px;height:140px;margin:10px auto;display:flex;align-items:center;justify-content:center;border-radius:8px;padding:6px;box-shadow:0 4px 12px rgba(0,0,0,0.5);">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=130x130&data=upi://pay?pa=885223337@axl&pn=GMART&am=399.00&cu=INR" alt="Canara Bank UPI QR" style="width:130px;height:130px;">
+        </div>
+        <p style="font-size:12px;color:#fff;margin-top:6px;">UPI ID: <strong>885223337@axl</strong></p>
+
+        <a href="upi://pay?pa=885223337@axl&pn=GMART&am=399.00&cu=INR" style="display:block;margin-top:10px;background:#16a34a;color:#fff;padding:10px;border-radius:6px;text-decoration:none;font-weight:bold;font-size:13px;">
+          📲 Pay via GPay / PhonePe / Paytm
+        </a>
+
+        <!-- WhatsApp Link for sending payment receipt -->
+        <a id="whatsappReceiptLink" href="https://wa.me/918885223337?text=Hi%20Admin,%20I%20have%20paid%20₹399%20joining%20fee%20for%20GMART.%20Here%20is%20my%20payment%20receipt:" target="_blank" style="display:block;margin-top:8px;background:#25D366;color:#fff;padding:10px;border-radius:6px;text-decoration:none;font-weight:bold;font-size:13px;">
+          💬 Send Payment Receipt on WhatsApp (Admin)
+        </a>
+        
+        <label class="label" style="margin-top:12px;">Enter UTR / UPI Reference ID</label>
+        <input class="input" id="regUtrId" placeholder="Enter 12-digit UTR ID">
+      </div>
+
+      <button class="btn" id="registerBtn"
+        onclick="window.registerMember()" style="margin-top:15px;">SUBMIT & COMPLETE REGISTRATION</button>
+
+      <button class="btn secondary"
+        onclick="window.showAuthPage('login')">
+        BACK TO LOGIN
+      </button>
+
+    </div>
+
+    <div id="registerStatus" class="status"></div>
+
+    <div id="registerSuccess" class="form-card hidden">
+
+      <h3 style="color:#dc2626;">
+        Registration Successful!
+      </h3>
+
+      <p class="muted" style="margin-top:10px;">
+        Member Code:
+      </p>
+
+      <div class="code" id="newMemberCode"></div>
+
+      <p class="muted">Referral Code:</p>
+
+      <div class="code" id="newReferralCode"></div>
+
+      <button class="btn" onclick="window.showAuthPage('login')">
+        GO TO LOGIN
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- HOME PAGE -->
+  <div id="home" class="page">
+
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <div>
+        <small class="muted">Welcome back 👋</small>
+        <h1 id="welcomeName">Member</h1>
+      </div>
+      <span class="g-coin-3d" style="width:48px;height:48px;font-size:26px;">G</span>
+    </div>
+
+    <br>
+
+    <section class="hero">
+
+      <label style="font-size:12px;opacity:0.9;">
+        MY WALLET BALANCE
+      </label>
+
+      <div class="balance" id="homeBalance">
+        ₹0 <span style="font-size:13px;">points</span>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:5px;">
+
+        <span class="pill" id="memberId">Member ID</span>
+
+        <span style="font-size:11px;">GMART MEMBER</span>
+
+      </div>
+
+    </section>
+
+
+    <section class="card">
+
+      <h3>My Overview</h3>
+
+      <div class="grid" style="margin-top:10px;">
+
+        <div style="background:#121212;padding:10px;border-radius:8px;">
+
+          <div class="balance" id="refCount"
+            style="font-size:20px;margin:2px 0;">0</div>
+
+          <div class="muted">Direct referrals</div>
+
+        </div>
+
+        <div style="background:#121212;padding:10px;border-radius:8px;">
+
+          <div class="balance" id="orderCount"
+            style="font-size:20px;margin:2px 0;">0</div>
+
+          <div class="muted">Grocery orders</div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <section class="card">
+
+      <h3>Your Referral Code</h3>
+
+      <div class="refbox" style="margin-top:10px;">
+
+        <div class="code" id="refCode">—</div>
+
+        <button class="btn"
+          style="width:auto;padding:8px 16px;margin:0;"
+          onclick="window.copyCode()">COPY</button>
+
+      </div>
+
+    </section>
+
+
+    <section class="card">
+
+      <h3>My Team (5 Levels)</h3>
+
+      <div class="levels" id="homeLevelCounts">
+
+        <div class="level"><b>—</b><span>L1</span></div>
+        <div class="level"><b>—</b><span>L2</span></div>
+        <div class="level"><b>—</b><span>L3</span></div>
+        <div class="level"><b>—</b><span>L4</span></div>
+        <div class="level"><b>—</b><span>L5</span></div>
+
+      </div>
+
+    </section>
+
+  </div>
+
+
+  <!-- WALLET PAGE -->
+  <div id="wallet" class="page">
+
+    <div class="page-title">My Wallet</div>
+
+    <section class="hero">
+
+      <label style="font-size:12px;opacity:0.9;">
+        AVAILABLE BALANCE
+      </label>
+
+      <div class="balance" id="walletBalance">₹0</div>
+
+      <span class="pill">Points balance</span>
+
+    </section>
+
+    <!-- COIN WALLET WITH 21-DAY TIMER & CALCULATIONS -->
+    <section class="hero" style="background:linear-gradient(135deg,#7f1d1d,#dc2626);border:1px solid #ef4444;">
+
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <label style="font-size:12px;opacity:0.9;display:flex;align-items:center;">
+          <span class="g-coin-3d" style="width:28px;height:28px;font-size:15px;margin-right:8px;">G</span> MY COIN WALLET
+        </label>
+        <span id="walletStatusBadge" class="badge-frozen">FREEZED ❄️</span>
+      </div>
+
+      <div class="balance" id="coinBalance" style="margin-top:12px;">
+        0 Coins
+      </div>
+      <div style="font-size:11px;opacity:0.8;" id="coinBreakdown">
+        Includes 250% Joining Bonus (399 × 2.5 = 997.5 Coins)
+      </div>
+
+      <!-- 21 DAYS TIMER CARD -->
+      <div style="margin-top:18px;background:rgba(0,0,0,0.35);padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.2);">
+
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div style="font-size:12px;">⏳ 21-Day Referral Target Timer</div>
+          <div style="font-size:11px;" id="referralProgress">0 / 3 Directs</div>
+        </div>
+
+        <div id="coinCountdown" style="font-size:20px;font-weight:bold;margin-top:6px;color:#fde047;">
+          21 Days 00 Hours 00 Min 00 Sec
+        </div>
+
+        <small id="coinExpiryDate" style="opacity:0.8;display:block;margin-top:4px;"></small>
+
+        <p style="font-size:11px;margin-top:8px;color:#ddd;line-height:1.4;">
+          📌 Add 3 direct referrals before timer ends to unlock your wallet. After 3 referrals, get <strong>50% bonus coins (199.5 Coins)</strong> per new referral!
+        </p>
+
+      </div>
+
+    </section>
+
+    <!-- WITHDRAWAL SECTION WITH UPI ID -->
+    <section class="card" id="withdrawalSection">
+      <h3>💸 Withdraw Coins to UPI</h3>
+      <div id="withdrawalBox">
+        <p class="muted" id="withdrawalNotice" style="margin-top:8px;color:#f59e0b;">
+          🔒 Wallet is currently FREEZED. Complete 3 direct referrals in 21 days to unlock withdrawal.
+        </p>
+
+        <div id="withdrawalForm" class="hidden" style="margin-top:12px;">
+          <label class="label">Enter UPI ID (e.g. name@upi / mobile@ybl)</label>
+          <input class="input" id="upiId" placeholder="example@upi">
+
+          <label class="label">Coins to Withdraw</label>
+          <input class="input" id="withdrawCoinsAmount" type="number" placeholder="Enter coins">
+
+          <button class="btn" style="background:#10b981;" onclick="window.submitUPIWithdrawal()">
+            SUBMIT WITHDRAWAL REQUEST
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+
+      <h3 style="display:flex;align-items:center;">
+        <span class="g-coin-3d" style="width:24px;height:24px;font-size:13px;margin-right:8px;">G</span> Coin Transaction History
+      </h3>
+
+      <div id="coinTransactions" style="margin-top:12px;">
+        <div class="muted">No coin transactions available.</div>
+      </div>
+
+    </section>
+
+    <section class="card">
+
+      <h3>Recent Transactions</h3>
+
+      <div id="walletTransactions" style="margin-top:10px;">
+        <div class="muted">No transactions available.</div>
+      </div>
+
+    </section>
+
+  </div>
+
+
+  <!-- TEAM PAGE -->
+  <div id="team" class="page">
+
+    <div class="page-title">My Team</div>
+
+    <section class="card">
+
+      <div class="muted">Your referral code</div>
+
+      <div class="refbox" style="margin:5px 0 10px 0;">
+
+        <div class="code" id="teamRefCode">—</div>
+
+        <button class="btn"
+          style="width:auto;padding:8px 16px;margin:0;"
+          onclick="window.copyCode()">COPY</button>
+
+      </div>
+
+      <p class="muted" id="teamDirect">
+        Direct referrals: 0
+      </p>
+
+    </section>
+
+
+    <section class="card">
+
+      <b>Level-wise Team</b>
+
+      <div class="levels" id="teamLevelCounts"
+        style="margin-top:10px;"></div>
+
+    </section>
+
+    <section id="teamLevelDetails"></section>
+
+  </div>
+
+
+  <!-- SHOP PAGE -->
+  <div id="shop" class="page">
+
+    <div class="page-title">Grocery Store</div>
+
+    <div class="card">
+      🥦 <strong>Fresh Vegetables</strong>
+      <p class="muted">Catalogue coming soon</p>
+    </div>
+
+    <div class="card">
+      🍚 <strong>Rice & Staples</strong>
+      <p class="muted">Catalogue coming soon</p>
+    </div>
+
+    <div class="card">
+      🥛 <strong>Daily Essentials</strong>
+      <p class="muted">Catalogue coming soon</p>
+    </div>
+
+  </div>
+
+
+  <!-- PROFILE PAGE -->
+  <div id="profile" class="page">
+
+    <div class="page-title">My Profile</div>
+
+    <section class="card">
+
+      <div class="muted">Full name</div>
+      <div style="font-size:18px;font-weight:bold;"
+        id="profileName">—</div>
+
+      <hr style="border:0;border-top:1px solid #333;margin:12px 0">
+
+      <div class="muted">Member ID</div>
+      <p id="profileMember">—</p>
+
+      <br>
+
+      <div class="muted">Referral code</div>
+      <p id="profileReferral">—</p>
+
+    </section>
+
+    <button class="btn secondary" onclick="window.logout()">
+      LOG OUT
+    </button>
+
+  </div>
+
+  <!-- ADMIN PAGE -->
+  <div id="admin" class="page">
+
+    <div class="page-title">Admin Panel</div>
+
+    <!-- Admin Panel Member Approval & Notifications -->
+    <section class="card" style="border: 2px solid #dc2626;">
+      <h3>🔔 Pending New Member Approvals</h3>
+      <p class="muted">New registrations waiting for admin payment confirmation:</p>
+      <div id="adminPendingRegistrations" style="margin-top:10px;">
+        <p class="muted">Loading pending requests...</p>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3>Member Management & Withdrawal Requests</h3>
+
+      <input
+        class="input"
+        id="adminSearch"
+        placeholder="Search name / mobile / member ID"
+        oninput="window.filterAdminMembers()"
+      >
+
+      <div id="adminMemberList">
+        <p class="muted">Members will load here</p>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3>Selected Member</h3>
+
+      <div id="adminSelectedMember">
+        <p class="muted">Select a member first</p>
+      </div>
+
+      <label class="label">Points</label>
+      <input class="input" id="adminPoints"
+        type="number" min="1" placeholder="Enter points">
+
+      <label class="label">Description</label>
+      <input class="input" id="adminDescription"
+        placeholder="Enter reason">
+
+      <button class="btn" onclick="window.adminAdjustWallet('add')">
+        ADD POINTS
+      </button>
+
+      <button class="btn secondary" onclick="window.adminAdjustWallet('deduct')">
+        DEDUCT POINTS
+      </button>
+
+      <hr style="margin:20px 0;">
+
+      <h3>Member Account Status</h3>
+
+      <button class="btn"
+        style="background:#dc2626;"
+        onclick="window.adminToggleMemberStatus(false)">
+        BLOCK MEMBER
+      </button>
+
+      <button class="btn"
+        style="background:#16a34a;"
+        onclick="window.adminToggleMemberStatus(true)">
+        UNBLOCK MEMBER
+      </button>
+    </section>
+
+    <section class="card">
+      <h3>Transaction History</h3>
+
+      <button class="btn secondary"
+        onclick="window.adminLoadTransactions()">
+        LOAD TRANSACTIONS
+      </button>
+
+      <div id="adminTransactions"></div>
+    </section>
+
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <nav class="nav" id="nav" style="display:none;">
+
+    <button class="active" onclick="window.show('home',this)">
+      <b>⌂</b>Home
+    </button>
+
+    <button onclick="window.show('wallet',this)">
+      <b>◉</b>Wallet
+    </button>
+
+    <button onclick="window.show('team',this)">
+      <b>♧</b>Team
+    </button>
+
+    <button onclick="window.show('shop',this)">
+      <b>▣</b>Shop
+    </button>
+
+    <button onclick="window.show('profile',this)">
+      <b>●</b>Profile
+    </button>
+
+    <button id="adminNavBtn" style="display:none;position:relative;"
+      onclick="window.adminLoadMembers(); window.show('admin',this)">
+      <b>⚙</b>Admin
+      <span id="adminNotificationBadge" class="admin-badge hidden">0</span>
+    </button>
+
+  </nav>
+
+</div>
+
+
+<script>
+
+// ========================================
+// SUPABASE SETTINGS
+// ========================================
+
+const BASE = 'https://barcyhymljlnoufgrfpf.supabase.co/functions/v1';
+
+const SUPABASE_PUBLISHABLE_KEY =
+'sb_publishable_wwOp_V-fleqYuc-YWzHWtA_S5BAtGgL';
+
+let accessToken = '';
+let dashboardData = null;
+
+
+// ========================================
+// SAFE HTML TEXT
+// ========================================
+
+function escapeHtml(value) {
+
+  return String(value ?? '').replace(/[&<>"']/g, function(char) {
+
+    const map = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#039;'
+    };
+
+    return map[char];
+
+  });
+
+}
+
+
+// ========================================
+// STATUS MESSAGE
+// ========================================
+
+function status(id, msg, type = 'error') {
+
+  const el = document.getElementById(id);
+
+  if (el) {
+
+    el.className = 'status ' + type;
+    el.textContent = msg;
+
+  }
+
+}
+
+
+// ========================================
+// PAGE NAVIGATION
+// ========================================
+
+function show(id, btn) {
+
+  document.querySelectorAll('.page').forEach(p => {
+    p.classList.remove('active');
+  });
+
+  const target = document.getElementById(id);
+
+  if (target) {
+    target.classList.add('active');
+  }
+
+  document.querySelectorAll('.nav button').forEach(b => {
+    b.classList.remove('active');
+  });
+
+  if (btn) {
+
+    btn.classList.add('active');
+
+  } else {
+
+    const map = {
+      home: 0,
+      wallet: 1,
+      team: 2,
+      shop: 3,
+      profile: 4,
+      admin: 5
+    };
+
+    const buttons = document.querySelectorAll('.nav button');
+
+    if (map[id] !== undefined && buttons[map[id]]) {
+      buttons[map[id]].classList.add('active');
+    }
+
+  }
+
+  window.scrollTo(0, 0);
+
+}
+
+
+function showAuthPage(id) {
+
+  document.querySelectorAll('.page').forEach(p => {
+    p.classList.remove('active');
+  });
+
+  const target = document.getElementById(id);
+
+  if (target) {
+    target.classList.add('active');
+  }
+
+  const nav = document.getElementById('nav');
+
+  if (nav) {
+    nav.style.display = 'none';
+  }
+
+  window.scrollTo(0, 0);
+
+}
+
+
+// ========================================
+// REGISTER MEMBER WITH PAYMENT UTR VERIFICATION
+// ========================================
+
+async function registerMember() {
+
+  const key = SUPABASE_PUBLISHABLE_KEY;
+
+  const name = document.getElementById('regName').value.trim();
+
+  const mobile = document.getElementById('regMobile').value.replace(/\D/g, '');
+
+  const password = document.getElementById('regPassword').value;
+
+  const confirmPassword = document.getElementById('regConfirmPassword').value;
+
+  const referral_code = document.getElementById('regReferral').value.trim();
+  
+  const utrId = document.getElementById('regUtrId').value.trim();
+
+  const btn = document.getElementById('registerBtn');
+
+  status('registerStatus', '');
+
+  document.getElementById('registerSuccess').classList.add('hidden');
+
+  if (name.length < 2) {
+    status('registerStatus', 'Enter valid name.');
+    return;
+  }
+
+  if (!/^[6-9]\d{9}$/.test(mobile)) {
+    status('registerStatus', 'Enter valid 10 digit mobile number.');
+    return;
+  }
+
+  if (password.length < 8) {
+    status('registerStatus', 'Password minimum 8 characters.');
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    status('registerStatus', 'Passwords do not match.');
+    return;
+  }
+
+  if (!utrId || utrId.length < 6) {
+    status('registerStatus', 'Please enter a valid Payment Transaction / UTR ID.');
+    return;
+  }
+
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = 'SUBMITTING FOR ADMIN APPROVAL...';
+  }
+
+  try {
+
+    const res = await fetch(BASE + '/gmart-register', {
+
+      method: 'POST',
+
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': key
+      },
+
+      body: JSON.stringify({
+        name,
+        mobile,
+        password,
+        referral_code,
+        joining_amount: 399,
+        utr_id: utrId,
+        pending_approval: true
+      })
+
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      throw new Error(data.error || data.message || 'Registration failed');
+    }
+
+    document.getElementById('newMemberCode').textContent =
+      data.member_code || 'Pending Approval';
+
+    document.getElementById('newReferralCode').textContent =
+      data.referral_code || 'Pending Approval';
+
+    document.getElementById('registerSuccess').classList.remove('hidden');
+
+    status('registerStatus', 'Registration submitted successfully! Please send receipt on WhatsApp. Account will be activated once Admin confirms payment.', 'ok');
+
+  } catch (e) {
+
+    status('registerStatus', e.message || 'Registration failed.');
+
+  } finally {
+
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = 'SUBMIT & COMPLETE REGISTRATION';
+    }
+
+  }
+
+}
+
+
+// ========================================
+// LOGIN MEMBER
+// ========================================
+
+async function loginMember() {
+
+  const key = SUPABASE_PUBLISHABLE_KEY;
+
+  const mobile = document.getElementById('mobile').value.replace(/\D/g, '');
+
+  const password = document.getElementById('password').value;
+
+  const btn = document.getElementById('loginBtn');
+
+  status('loginStatus', '');
+
+  if (!/^[6-9]\d{9}$/.test(mobile) || !password) {
+
+    status('loginStatus', 'Enter a valid 10-digit mobile number and password.');
+
+    return;
+
+  }
+
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = 'PLEASE WAIT...';
+  }
+
+  try {
+
+    const res = await fetch(BASE + '/gmart-login', {
+
+      method: 'POST',
+
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': key
+      },
+
+      body: JSON.stringify({
+        mobile,
+        password
+      })
+
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || !data.success || !data.access_token) {
+
+      throw new Error(data.error || data.message || 'Login failed');
+
+    }
+
+    accessToken = data.access_token;
+
+    sessionStorage.setItem('gmart_access_token', accessToken);
+
+    sessionStorage.setItem('gmart_api_key', key);
+
+    await loadDashboard(key);
+
+    const loginStatus = document.getElementById('loginStatus');
+
+    if (loginStatus) {
+      loginStatus.className = 'status';
+    }
+
+  } catch (e) {
+
+    status('loginStatus', e.message || 'Unable to login. Admin approval may be pending or incorrect password.');
+
+  } finally {
+
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = 'LOGIN';
+    }
+
+  }
+
+}
+
+
+// ========================================
+// LOAD DASHBOARD
+// ========================================
+
+async function loadDashboard(key) {
+
+  const res = await fetch(BASE + '/gmart-dashboard', {
+
+    method: 'POST',
+
+    headers: {
+      'Content-Type': 'application/json',
+      'apikey': key,
+      'Authorization': 'Bearer ' + accessToken
+    },
+
+    body: JSON.stringify({})
+
+  });
+
+  const data = await res.json();
+
+  if (!res.ok || !data.success) {
+
+    throw new Error(data.details || data.error || 'Dashboard loading failed');
+
+  }
+
+  dashboardData = data;
+
+  renderDashboard(data);
+
+  const loginPage = document.getElementById('login');
+
+  if (loginPage) {
+    loginPage.classList.remove('active');
+  }
+
+  const nav = document.getElementById('nav');
+
+  if (nav) {
+    nav.style.display = 'flex';
+  }
+
+  show('home');
+
+  const adminBtn = document.getElementById('adminNavBtn');
+
+  if (adminBtn) {
+    adminBtn.style.display = 'none';
+
+    try {
+      await adminRequest('verify');
+      adminBtn.style.display = '';
+      await checkAdminNotifications();
+    } catch (error) {
+      adminBtn.style.display = 'none';
+    }
+  }
+
+}
+
+
+// ========================================
+// COIN WALLET & 21-DAY TIMER CALCULATIONS
+// ========================================
+
+let coinCountdownInterval = null;
+
+function renderCoinWallet(coinWallet, memberObj, referralsObj) {
+
+  const wallet = coinWallet || {};
+  const directReferrals = Number(referralsObj?.direct_referrals || 0);
+  const joiningDate = new Date(memberObj?.created_at || memberObj?.joining_date || Date.now()).getTime();
+
+  const expiryTime = joiningDate + (21 * 24 * 60 * 60 * 1000);
+  const isTimeExpired = Date.now() >= expiryTime;
+  const isTargetAchieved = directReferrals >= 3;
+
+  const joiningDeposit = 399;
+  const initial250Bonus = joiningDeposit * 2.5;
+
+  let currentCoins = Number(wallet.balance || initial250Bonus);
+
+  if (directReferrals > 3) {
+    const extraReferrals = directReferrals - 3;
+    const bonusCoins = extraReferrals * (joiningDeposit * 0.5);
+    currentCoins += bonusCoins;
+  }
+
+  let isFrozen = true;
+
+  if (isTargetAchieved) {
+    isFrozen = false;
+  } else if (isTimeExpired) {
+    isFrozen = true;
+    currentCoins = Math.max(0, joiningDeposit - 100); 
+  }
+
+  const balanceElement = document.getElementById('coinBalance');
+
+  if (balanceElement) {
+    balanceElement.textContent = currentCoins.toLocaleString('en-IN') + ' Coins';
+  }
+
+  const statusBadge = document.getElementById('walletStatusBadge');
+  const withdrawNotice = document.getElementById('withdrawalNotice');
+  const withdrawForm = document.getElementById('withdrawalForm');
+
+  if (isTargetAchieved) {
+    if (statusBadge) {
+      statusBadge.className = 'badge-unlocked';
+      statusBadge.textContent = 'UNLOCKED 🔓';
+    }
+    if (withdrawNotice) withdrawNotice.classList.add('hidden');
+    if (withdrawForm) withdrawForm.classList.remove('hidden');
+  } else if (isTimeExpired) {
+    if (statusBadge) {
+      statusBadge.className = 'badge-expired';
+      statusBadge.textContent = 'BONUS EXPIRED (-100 FEE) ⚠️';
+    }
+    if (withdrawNotice) {
+      withdrawNotice.classList.remove('hidden');
+      withdrawNotice.style.color = '#ef4444';
+      withdrawNotice.textContent = '⚠️ 21-Day target failed! 250% bonus removed & ₹100 platform fee deducted. Remaining 299 Coins unlocked for withdrawal.';
+    }
+    if (withdrawForm) withdrawForm.classList.remove('hidden');
+  } else {
+    if (statusBadge) {
+      statusBadge.className = 'badge-frozen';
+      statusBadge.textContent = 'FREEZED (21 Days) ❄️';
+    }
+    if (withdrawNotice) {
+      withdrawNotice.classList.remove('hidden');
+      withdrawNotice.style.color = '#f59e0b';
+      withdrawNotice.textContent = `🔒 Wallet is FREEZED. You have ${3 - directReferrals} more direct referrals needed to unlock withdrawal!`;
+    }
+    if (withdrawForm) withdrawForm.classList.add('hidden');
+  }
+
+  const progressEl = document.getElementById('referralProgress');
+  if (progressEl) {
+    progressEl.textContent = `${directReferrals} / 3 Directs Achieved`;
+  }
+
+  if (coinCountdownInterval) {
+    clearInterval(coinCountdownInterval);
+    coinCountdownInterval = null;
+  }
+
+  const expiryElement = document.getElementById('coinCountdown');
+  const expiryDateElement = document.getElementById('coinExpiryDate');
+
+  if (expiryElement) {
+
+    if (expiryDateElement) {
+      expiryDateElement.textContent = 'Offer Ends On: ' + new Date(expiryTime).toLocaleString('en-IN');
+    }
+
+    function updateCountdown() {
+
+      const difference = expiryTime - Date.now();
+
+      if (difference <= 0 || isTargetAchieved) {
+
+        if (isTargetAchieved) {
+          expiryElement.textContent = '🎉 Target Completed & Unlocked!';
+          expiryElement.style.color = '#10b981';
+        } else {
+          expiryElement.textContent = 'Timer Expired';
+          expiryElement.style.color = '#ef4444';
+        }
+
+        clearInterval(coinCountdownInterval);
+        coinCountdownInterval = null;
+        return;
+
+      }
+
+      const days = Math.floor(difference / 86400000);
+      const hours = Math.floor((difference % 86400000) / 3600000);
+      const minutes = Math.floor((difference % 3600000) / 60000);
+      const seconds = Math.floor((difference % 60000) / 1000);
+
+      expiryElement.textContent =
+        days + ' Days ' +
+        hours + ' Hours ' +
+        minutes + ' Min ' +
+        seconds + ' Sec';
+
+    }
+
+    updateCountdown();
+    coinCountdownInterval = setInterval(updateCountdown, 1000);
+
+  }
+
+  const transactions = wallet.transactions || [
+    {
+      description: 'Joining Bonus (399 * 250%)',
+      created_at: memberObj?.created_at,
+      coins: initial250Bonus,
+      transaction_type: 'credit',
+      status: isTargetAchieved ? 'unlocked' : (isTimeExpired ? 'expired' : 'freezed')
+    }
+  ];
+
+  const transactionElement = document.getElementById('coinTransactions');
+
+  if (!transactionElement) return;
+
+  transactionElement.innerHTML = transactions.map(t => {
+
+    const coins = Number(t.coins || 0);
+    const type = String(t.transaction_type || '').toLowerCase();
+    const isCredit = type === 'credit' || type === 'bonus' || type === 'reward';
+    const color = isCredit ? '#dc2626' : '#ff7777';
+    const sign = isCredit ? '+' : '-';
+    const date = t.created_at ? new Date(t.created_at).toLocaleString('en-IN') : '';
+
+    return `
+      <div style="
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        gap:10px;
+        padding:12px 0;
+        border-bottom:1px solid #333;
+      ">
+
+        <div>
+          <strong>${escapeHtml(t.description || 'Coin Transaction')}</strong>
+          <div class="muted" style="margin-top:5px;">${escapeHtml(date)}</div>
+          <small class="muted">Status: ${escapeHtml(t.status || 'active')}</small>
+        </div>
+
+        <strong style="color:${color};white-space:nowrap;">
+          ${sign}${coins.toLocaleString('en-IN')} Coins
+        </strong>
+
+      </div>
+    `;
+
+  }).join('');
+
+}
+
+
+// ========================================
+// SUBMIT UPI WITHDRAWAL
+// ========================================
+
+async function submitUPIWithdrawal() {
+
+  const upiId = document.getElementById('upiId').value.trim();
+  const amount = Number(document.getElementById('withdrawCoinsAmount').value);
+
+  if (!upiId || !upiId.includes('@')) {
+    alert('Please enter a valid UPI ID (e.g. mobile@upi)');
+    return;
+  }
+
+  if (!amount || amount <= 0) {
+    alert('Please enter valid withdrawal coins');
+    return;
+  }
+
+  try {
+
+    const res = await fetch(BASE + '/gmart-withdraw', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_PUBLISHABLE_KEY,
+        'Authorization': 'Bearer ' + accessToken
+      },
+      body: JSON.stringify({
+        upi_id: upiId,
+        coins: amount
+      })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      throw new Error(data.error || data.message || 'Withdrawal request failed');
+    }
+
+    alert('Withdrawal request of ' + amount + ' Coins submitted successfully to UPI ID: ' + upiId + '\n(Notification sent to Admin Panel)');
+
+    document.getElementById('upiId').value = '';
+    document.getElementById('withdrawCoinsAmount').value = '';
+
+    await loadDashboard(SUPABASE_PUBLISHABLE_KEY);
+
+  } catch (error) {
+
+    alert(error.message || 'Withdrawal submitted for processing.');
+
+  }
+
+}
+
+
+// ========================================
+// RENDER DASHBOARD
+// ========================================
+
+function renderDashboard(d) {
+
+  const m = d.member || {};
+
+  const w = d.wallet || {};
+
+  const r = d.referrals || {};
+
+  const g = d.grocery || {};
+
+  const cw = d.coin_wallet || {};
+
+  renderCoinWallet(cw, m, r);
+
+  renderLevelWiseTeam(d.level_wise_team || []);
+
+  const balance = Number(w.balance || 0);
+
+  document.getElementById('welcomeName').textContent =
+    m.name || m.full_name || 'Member';
+
+  document.getElementById('homeBalance').innerHTML =
+    '₹' + balance.toLocaleString('en-IN') +
+    ' <span style="font-size:13px;font-weight:600">points</span>';
+
+  document.getElementById('walletBalance').textContent =
+    '₹' + balance.toLocaleString('en-IN');
+
+  document.getElementById('memberId').textContent =
+    'Member ID · ' + (m.member_code || '—');
+
+  document.getElementById('refCount').textContent =
+    r.direct_referrals ?? 0;
+
+  document.getElementById('orderCount').textContent =
+    g.total_orders ?? 0;
+
+  document.getElementById('refCode').textContent =
+    m.referral_code || '—';
+
+  document.getElementById('teamRefCode').textContent =
+    m.referral_code || '—';
+
+  document.getElementById('teamDirect').textContent =
+    'Direct referrals: ' + (r.direct_referrals ?? 0);
+
+  document.getElementById('profileName').textContent =
+    m.name || m.full_name || '—';
+
+  document.getElementById('profileMember').textContent =
+    m.member_code || '—';
+
+  document.getElementById('profileReferral').textContent =
+    m.referral_code || '—';
+
+
+  // TRANSACTIONS
+
+  const tx = d.transactions || [];
+
+  const html = tx.length
+
+    ? tx.map(t => `
+
+      <div style="display:flex;justify-content:space-between;margin-top:12px;gap:10px;">
+
+        <div>
+          <strong>${escapeHtml(t.description || 'Transaction')}</strong>
+
+          <br>
+
+          <small class="muted">
+            ${t.created_at
+              ? escapeHtml(new Date(t.created_at).toLocaleString('en-IN'))
+              : ''}
+          </small>
+
+        </div>
+
+        <em>${Number(t.points || 0)} pts</em>
+
+      </div>
+
+    `).join('')
+
+    : '<div class="muted">No transactions yet.</div>';
+
+  document.getElementById('walletTransactions').innerHTML = html;
+
+}
+
+
+// ========================================
+// RENDER 5 LEVEL TEAM
+// ========================================
+
+function renderLevelWiseTeam(levels) {
+
+  const normalized = Array.from({ length: 5 }, (_, i) => {
+
+    const found = (Array.isArray(levels) ? levels : [])
+      .find(x => Number(x.level) === i + 1);
+
+    return {
+
+      level: i + 1,
+
+      member_count: Number(
+        found?.member_count ?? found?.members?.length ?? 0
+      ),
+
+      members: Array.isArray(found?.members)
+        ? found.members
+        : []
+
+    };
+
+  });
+
+
+  // LEVEL COUNTS
+
+  const countHtml = normalized.map(x => `
+
+    <div class="level">
+
+      <b>${x.member_count}</b>
+
+      <span>L${x.level}</span>
+
+    </div>
+
+  `).join('');
+
+
+  const homeCounts = document.getElementById('homeLevelCounts');
+
+  const teamCounts = document.getElementById('teamLevelCounts');
+
+  if (homeCounts) {
+    homeCounts.innerHTML = countHtml;
+  }
+
+  if (teamCounts) {
+    teamCounts.innerHTML = countHtml;
+  }
+
+
+  // MEMBER DETAILS
+
+  const details = document.getElementById('teamLevelDetails');
+
+  if (details) {
+
+    const memberHtml = normalized.map(level => `
+
+      <div class="team-member-card">
+
+        <h3>
+
+          Level ${level.level}
+
+          <span style="float:right;">
+            ${level.member_count} Members
+          </span>
+
+        </h3>
+
+        ${
+          level.members.length
+
+          ? level.members.map(member => `
+
+            <div class="member-row">
+
+              <b>${escapeHtml(member.name || member.full_name || 'Member')}</b>
+
+              <div style="font-size:13px;color:#666;margin-top:5px;">
+                Member ID: ${escapeHtml(member.member_code || '-')}
+              </div>
+
+              <div style="font-size:12px;color:#888;margin-top:4px;">
+                Joined: ${
+                  member.joining_date || member.created_at
+                    ? escapeHtml(
+                        new Date(member.joining_date || member.created_at)
+                        .toLocaleDateString('en-IN')
+                      )
+                    : '-'
+                }
+              </div>
+
+            </div>
+
+          `).join('')
+
+          : '<p style="color:#888;font-size:13px;">No members in this level yet.</p>'
+        }
+
+      </div>
+
+    `).join('');
+
+    details.innerHTML = memberHtml;
+
+  }
+
+}
+
+
+// ========================================
+// COPY REFERRAL CODE
+// ========================================
+
+async function copyCode() {
+
+  const code = document.getElementById('refCode').textContent.trim();
+
+  if (!code || code === '—') {
+
+    alert('Referral code not available.');
+
+    return;
+
+  }
+
+  try {
+
+    await navigator.clipboard.writeText(code);
+
+    alert('Referral code copied: ' + code);
+
+  } catch (e) {
+
+    const input = document.createElement('textarea');
+
+    input.value = code;
+
+    document.body.appendChild(input);
+
+    input.select();
+
+    document.execCommand('copy');
+
+    input.remove();
+
+    alert('Referral code copied: ' + code);
+
+  }
+
+}
+
+
+// ========================================
+// LOGOUT
+// ========================================
+
+function logout() {
+
+  accessToken = '';
+
+  dashboardData = null;
+
+  sessionStorage.removeItem('gmart_access_token');
+
+  sessionStorage.removeItem('gmart_api_key');
+
+  document.getElementById('mobile').value = '';
+
+  document.getElementById('password').value = '';
+
+  const nav = document.getElementById('nav');
+
+  if (nav) {
+    nav.style.display = 'none';
+  }
+
+  status('loginStatus', '');
+
+  showAuthPage('login');
+
+}
+
+
+// ========================================
+// ADMIN PANEL & NOTIFICATION FUNCTIONS
+// ========================================
+
+let adminMembers = [];
+let selectedAdminMember = null;
+let adminWithdrawalRequests = [];
+
+async function adminRequest(action, extra = {}) {
+  const res = await fetch(BASE + '/gmart-admin', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'apikey': SUPABASE_PUBLISHABLE_KEY,
+      'Authorization': 'Bearer ' + accessToken
+    },
+    body: JSON.stringify({
+      action,
+      ...extra
+    })
+  });
+
+  const data = await res.json();
+
+  if (!res.ok || !data.success) {
+    throw new Error(data.error || data.message || 'Admin request failed');
+  }
+
+  return data;
+}
+
+async function checkAdminNotifications() {
+  try {
+    const data = await adminRequest('list_withdrawals').catch(() => ({ requests: [] }));
+    adminWithdrawalRequests = data.requests || [];
+    
+    if (!adminWithdrawalRequests.length) {
+      adminWithdrawalRequests = adminMembers.filter(m => m.pending_withdrawal);
+    }
+
+    const pendingRegs = adminMembers.filter(m => m.is_active === false || m.pending_approval);
+    renderPendingRegistrations(pendingRegs);
+
+    const badge = document.getElementById('adminNotificationBadge');
+    const totalNotifications = adminWithdrawalRequests.length + pendingRegs.length;
+    if (badge) {
+      if (totalNotifications > 0) {
+        badge.textContent = totalNotifications;
+        badge.classList.remove('hidden');
+      } else {
+        badge.classList.add('hidden');
+      }
+    }
+  } catch (e) {
+    console.error('Error fetching admin notifications', e);
+  }
+}
+
+function renderPendingRegistrations(pendingList) {
+  const container = document.getElementById('adminPendingRegistrations');
+  if (!container) return;
+
+  if (!pendingList || pendingList.length === 0) {
+    container.innerHTML = '<p class="muted">No pending member registrations.</p>';
+    return;
+  }
+
+  container.innerHTML = pendingList.map(m => `
+    <div style="background:#121212;padding:12px;border-radius:8px;margin-top:8px;border:1px solid #444;">
+      <strong>${escapeHtml(m.full_name || 'User')}</strong> (${escapeHtml(m.mobile)})
+      <p class="muted">UTR ID / Payment ID: <strong>${escapeHtml(m.utr_id || m.referral_code || 'N/A')}</strong></p>
+      <div style="margin-top:8px;display:flex;gap:8px;">
+        <button class="btn" style="background:#16a34a;padding:8px;margin:0;font-size:13px;" onclick="window.approveMemberAccount('${m.id}')">CONFIRM & GIVE ACCESS ✅</button>
+        <button class="btn" style="background:#dc2626;padding:8px;margin:0;font-size:13px;" onclick="window.rejectMemberAccount('${m.id}')">REJECT ❌</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+async function approveMemberAccount(memberId) {
+  if (!confirm('Confirm payment and grant account access to this member?')) return;
+  try {
+    await adminRequest('update_member_status', {
+      member_id: memberId,
+      is_active: true
+    });
+    alert('Member account approved and access granted successfully!');
+    await adminLoadMembers();
+  } catch (err) {
+    alert(err.message || 'Failed to approve');
+  }
+}
+
+async function rejectMemberAccount(memberId) {
+  if (!confirm('Reject this registration?')) return;
+  try {
+    await adminRequest('update_member_status', {
+      member_id: memberId,
+      is_active: false
+    });
+    alert('Member registration rejected.');
+    await adminLoadMembers();
+  } catch (err) {
+    alert(err.message || 'Failed to reject');
+  }
+}
+
+async function adminLoadMembers() {
+  const list = document.getElementById('adminMemberList');
+
+  try {
+    list.innerHTML = '<p>Loading members & pending registrations...</p>';
+
+    await adminRequest('verify');
+
+    const data = await adminRequest('list_members');
+
+    adminMembers = data.members || [];
+    await checkAdminNotifications();
+
+    renderAdminMembers();
+
+  } catch (error) {
+    list.innerHTML =
+      '<p style="color:#ff5555;">' +
+      escapeHtml(error.message) +
+      '</p>';
+  }
+}
+
+function filterAdminMembers() {
+  renderAdminMembers();
+}
+
+function renderAdminMembers() {
+  const list = document.getElementById('adminMemberList');
+
+  const search = (
+    document.getElementById('adminSearch').value || ''
+  ).toLowerCase();
+
+  const filtered = adminMembers.filter(member => {
+    return (
+      (member.full_name || '').toLowerCase().includes(search) ||
+      (member.mobile || '').toLowerCase().includes(search) ||
+      (member.member_code || '').toLowerCase().includes(search)
+    );
+  });
+
+  if (!filtered.length) {
+    list.innerHTML = '<p class="muted">No members found</p>';
+    return;
+  }
+
+  list.innerHTML = filtered.map(member => {
+    const hasWithdrawalReq = member.withdrawal_request || member.pending_withdrawal || false;
+    const upiInfo = member.upi_id ? ` | UPI: ${member.upi_id}` : '';
+
+    return `
+      <div class="card"
+        style="margin-top:10px;cursor:pointer;position:relative;border:${hasWithdrawalReq ? '2px solid #ef4444' : '1px solid #333'};"
+        onclick="window.selectAdminMember('${member.id}')">
+
+        ${hasWithdrawalReq ? '<span style="position:absolute;top:10px;right:10px;background:#ef4444;color:#fff;font-size:10px;font-weight:bold;padding:3px 8px;border-radius:4px;">💸 WITHDRAWAL REQUEST</span>' : ''}
+
+        <b>${escapeHtml(member.full_name || 'No name')}</b>
+
+        <p class="muted">
+          ${escapeHtml(member.member_code || '')} ${escapeHtml(upiInfo)}
+        </p>
+
+        <p class="muted">
+          Mobile: ${escapeHtml(member.mobile || '')}
+        </p>
+
+        <p>
+          Points: ${Number(member.points_balance || 0)}
+        </p>
+
+        <p style="font-weight:bold;color:${member.is_active === false ? '#ff5555' : '#dc2626'};">
+          Status: ${member.is_active === false ? 'BLOCKED / PENDING 🔴' : 'ACTIVE 🟢'}
+        </p>
+
+      </div>
+    `;
+  }).join('');
+}
+
+function selectAdminMember(id) {
+  selectedAdminMember =
+    adminMembers.find(member => member.id === id);
+
+  if (!selectedAdminMember) return;
+
+  const hasWithdrawalReq = selectedAdminMember.withdrawal_request || selectedAdminMember.pending_withdrawal || false;
+
+  document.getElementById('adminSelectedMember').innerHTML = `
+    <b>${escapeHtml(selectedAdminMember.full_name || '')}</b>
+    <p>Mobile: ${escapeHtml(selectedAdminMember.mobile || '')}</p>
+    <p>Member ID: ${escapeHtml(selectedAdminMember.member_code || '')}</p>
+    <p>Points: ${Number(selectedAdminMember.points_balance || 0)}</p>
+    <p>UPI ID: ${escapeHtml(selectedAdminMember.upi_id || 'Not provided')}</p>
+    <p style="font-weight:bold;color:${selectedAdminMember.is_active === false ? '#ff5555' : '#dc2626'};">
+      Status: ${selectedAdminMember.is_active === false ? 'BLOCKED / PENDING 🔴' : 'ACTIVE 🟢'}
+    </p>
+    ${hasWithdrawalReq ? '<div style="margin-top:10px;background:#5a1a1a;color:#ff8888;padding:8px;border-radius:6px;font-size:12px;">⚠️ <strong>Withdrawal Pending!</strong> Member requested coin withdrawal to UPI.</div>' : ''}
+  `;
+}
+
+async function adminAdjustWallet(type) {
+  if (!selectedAdminMember) {
+    alert('Please select a member first');
+    return;
+  }
+
+  const points = Number(
+    document.getElementById('adminPoints').value
+  );
+
+  const description =
+    document.getElementById('adminDescription').value.trim();
+
+  if (!Number.isInteger(points) || points <= 0) {
+    alert('Enter valid points');
+    return;
+  }
+
+  try {
+    const data = await adminRequest('adjust_wallet', {
+      member_id: selectedAdminMember.id,
+      points,
+      transaction_type: type,
+      description: description || 'Admin wallet adjustment'
+    });
+
+    alert(
+      'Wallet updated successfully. New balance: ' +
+      data.new_balance
+    );
+
+    await adminLoadMembers();
+
+    selectAdminMember(selectedAdminMember.id);
+
+    document.getElementById('adminPoints').value = '';
+
+  } catch (error) {
+    alert(error.message);
+  }
+}
+
+async function adminLoadTransactions() {
+  const box = document.getElementById('adminTransactions');
+
+  if (!selectedAdminMember) {
+    alert('Please select a member first');
+    return;
+  }
+
+  try {
+    box.innerHTML = '<p>Loading transactions...</p>';
+
+    const data = await adminRequest('list_transactions', {
+      member_id: selectedAdminMember.id
+    });
+
+    const transactions = data.transactions || [];
+
+    if (!transactions.length) {
+      box.innerHTML = '<p>No transactions found</p>';
+      return;
+    }
+
+    box.innerHTML = transactions.map(item => `
+      <div class="card" style="margin-top:10px;">
+        <b>${escapeHtml(item.transaction_type || '')}</b>
+        <p>Points: ${Number(item.points || 0)}</p>
+        <p>${escapeHtml(item.description || '')}</p>
+        <small>${escapeHtml(item.created_at || '')}</small>
+      </div>
+    `).join('');
+
+  } catch (error) {
+    box.innerHTML =
+      '<p style="color:red;">' +
+      escapeHtml(error.message) +
+      '</p>';
+  }
+}
+
+async function adminToggleMemberStatus(isActive) {
+
+  if (!selectedAdminMember) {
+    alert('Please select a member first');
+    return;
+  }
+
+  const actionText = isActive ? 'Unblock / Approve' : 'Block';
+
+  if (!confirm(actionText + ' this member?')) {
+    return;
+  }
+
+  const memberId = selectedAdminMember.id;
+
+  try {
+
+    const result = await adminRequest('update_member_status', {
+      member_id: memberId,
+      is_active: isActive
+    });
+
+    alert(result.message || 'Member status updated successfully');
+    await adminLoadMembers();
+    selectAdminMember(memberId);
+
+  } catch (error) {
+
+    alert(error.message);
+
+  }
+}
+
+// Bind all functions to window object explicitly
+window.loginMember = loginMember;
+window.registerMember = registerMember;
+window.showAuthPage = showAuthPage;
+window.show = show;
+window.copyCode = copyCode;
+window.logout = logout;
+window.adminLoadMembers = adminLoadMembers;
+window.filterAdminMembers = filterAdminMembers;
+window.selectAdminMember = selectAdminMember;
+window.adminAdjustWallet = adminAdjustWallet;
+window.adminLoadTransactions = adminLoadTransactions;
+window.adminToggleMemberStatus = adminToggleMemberStatus;
+window.submitUPIWithdrawal = submitUPIWithdrawal;
+window.approveMemberAccount = approveMemberAccount;
+window.rejectMemberAccount = rejectMemberAccount;
+
+</script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./service-worker.js").catch(err => console.error("Service worker registration failed:", err));
+  });
+}
+</script>
+</body>
+</html>
