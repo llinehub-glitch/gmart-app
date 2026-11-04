@@ -4,10 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#121212">
-<meta name="description" content="GMART Smart Grocery Rewards mobile app">
-<link rel="manifest" href="manifest.json">
-<link rel="icon" href="icons/icon-192.png">
-<link rel="apple-touch-icon" href="icons/icon-192.png">
 <title>GMART Mobile App</title>
 
 <style>
@@ -393,18 +389,18 @@ body {
       <input class="input" id="regReferral"
         placeholder="Referral code">
 
-      <!-- CANARA BANK UPI QR SCANNER SECTION (885223337@axl) -->
+      <!-- CANARA BANK UPI QR SCANNER SECTION (8885223337@axl) -->
       <div style="margin-top:15px;background:#121212;padding:14px;border-radius:8px;border:1px solid #444;text-align:center;">
         <label class="label" style="color:#fde047;font-weight:bold;margin-bottom:4px;">Canara Bank - 2159 QR Scanner (₹399)</label>
         <p style="font-size:11px;color:#aaa;margin-bottom:8px;">Primary account for receiving money</p>
         
-        <!-- Generated QR Code for Canara Bank UPI ID 885223337@axl -->
+        <!-- Generated QR Code for Canara Bank UPI ID 8885223337@axl -->
         <div style="background:#fff;width:140px;height:140px;margin:10px auto;display:flex;align-items:center;justify-content:center;border-radius:8px;padding:6px;box-shadow:0 4px 12px rgba(0,0,0,0.5);">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=130x130&data=upi://pay?pa=885223337@axl&pn=GMART&am=399.00&cu=INR" alt="Canara Bank UPI QR" style="width:130px;height:130px;">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=130x130&data=upi://pay?pa=8885223337@axl&pn=GMART&am=399.00&cu=INR" alt="Canara Bank UPI QR" style="width:130px;height:130px;">
         </div>
-        <p style="font-size:12px;color:#fff;margin-top:6px;">UPI ID: <strong>885223337@axl</strong></p>
+        <p style="font-size:12px;color:#fff;margin-top:6px;">UPI ID: <strong>8885223337@axl</strong></p>
 
-        <a href="upi://pay?pa=885223337@axl&pn=GMART&am=399.00&cu=INR" style="display:block;margin-top:10px;background:#16a34a;color:#fff;padding:10px;border-radius:6px;text-decoration:none;font-weight:bold;font-size:13px;">
+        <a href="upi://pay?pa=8885223337@axl&pn=GMART&am=399.00&cu=INR" style="display:block;margin-top:10px;background:#16a34a;color:#fff;padding:10px;border-radius:6px;text-decoration:none;font-weight:bold;font-size:13px;">
           📲 Pay via GPay / PhonePe / Paytm
         </a>
 
@@ -2119,13 +2115,6 @@ window.submitUPIWithdrawal = submitUPIWithdrawal;
 window.approveMemberAccount = approveMemberAccount;
 window.rejectMemberAccount = rejectMemberAccount;
 
-</script>
-<script>
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./service-worker.js").catch(err => console.error("Service worker registration failed:", err));
-  });
-}
 </script>
 </body>
 </html>
